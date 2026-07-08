@@ -15,10 +15,17 @@ def load_dictionary(dict_path):
 def compress_number(match):
     num = match.group(0)
     if '.' in num:
-        compressed = num.rstrip('0').rstrip('.')
-        if compressed.endswith('.'):
-            compressed += '0'
-        return compressed
+        int_part, frac_part = num.split('.')
+        # Удаляем нули справа
+        stripped = frac_part.rstrip('0')
+        removed_zeros = len(frac_part) - len(stripped)
+        if removed_zeros > 0:
+            # Сохраняем информацию о нулях
+            return f'{int_part}.{stripped}@{removed_zeros}'
+        else:
+            if stripped == '':
+                return f'{int_part}'
+            return f'{int_part}.{stripped}'
     return num
 
 def compress_digit_runs(text):
